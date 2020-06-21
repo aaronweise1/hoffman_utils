@@ -28,7 +28,7 @@ class UtilitiesManager:
         self.search_query_dict = {
             'from' : from_email,
             'subject' : subject,
-            'after' : after.replace(day=1)
+            'after' : after - datetime.timedelta(days=30)
         }
     
 
