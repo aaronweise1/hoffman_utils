@@ -54,7 +54,7 @@ for util in utilities_dict:
     utils_object.setSearchQuery(
         from_email=utilities_dict[util]['email'],
         subject=utilities_dict[util]['subject'],
-        after=datetime.date.today()
+        after=datetime.date.today() - datetime.timedelta(days=30),
     )
     utils_object.setBillPrice()
     print('Submitting', utils_object.util_type, 'for', utils_object.bill_price, 'to Splitwise')
