@@ -33,8 +33,8 @@ sfpuc = {
 recology = {
     'util_type' : 'garbage',
     'util_name' : 'recology',
-    'email' : None,
-    'subject' : None,
+    'email' : 'noreply@recology.com',
+    'subject' : 'New Bill Available',
 }
 
 utilities_dict = {

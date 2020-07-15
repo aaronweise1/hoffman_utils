@@ -66,7 +66,7 @@ class UtilitiesManager:
             self.bill_price = round(self.bill_price, 2)
             print('Adding $1.35 for PGE. New price is {price}'.format(price=self.bill_price))
         if self.util_type == 'interwebs':
-            self.bill_price = self.bill_price - 75.00 if self.bill_price > 75.00 else 0
+            self.bill_price = round(self.bill_price - 75.00,2) if self.bill_price > 75.00 else 0
             print('Subtracting $75 for Wave. New price is {price}'.format(price=self.bill_price))
     
 

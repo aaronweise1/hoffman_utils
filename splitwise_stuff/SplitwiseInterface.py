@@ -166,8 +166,8 @@ class SplitwiseInterface:
                     i += 1
         
         expense.setUsers(expense_members)
-        expense = self.sObj.createExpense(expense)
-        print('Successfully added to Splitwise. Expense ID:', expense.getId())
+        expenses = self.sObj.createExpense(expense)
+        print('Successfully added to Splitwise. Expense ID:', expenses.getId())
                 
 
 
