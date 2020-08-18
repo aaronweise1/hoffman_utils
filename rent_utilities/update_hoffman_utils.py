@@ -6,6 +6,7 @@ import sys
 sys.path.insert(1, '/home/ubuntu/scripts/scripts')
 from rent_utilities.UtilitiesManager import *
 from splitwise_stuff.SplitwiseInterface import *
+from google_stuff.gmail.GmailInterface import *
 import datetime
 
 
@@ -47,7 +48,7 @@ utilities_dict = {
 hoffman_splitwise_group_id = 10343208 
 # hoffman_splitwise_group_id = 19086415 # Test ID 
 payer = 'Aaron'
-
+confirmation_email_body = ''
 
 for util in utilities_dict:
     utils_object = UtilitiesManager(utilities_dict[util]['util_type'])
@@ -57,6 +58,10 @@ for util in utilities_dict:
         after=datetime.date.today() - datetime.timedelta(days=30),
     )
     utils_object.setBillPrice()
+    confirmation_email_body += 'Successfully submit {util} for {price} to Splitwise\n'.format(
+        util=utils_object.util_type, 
+        price=utils_object.bill_price
+    )
     print('Submitting', utils_object.util_type, 'for', utils_object.bill_price, 'to Splitwise')
     if not utils_object.bill_price or utils_object.bill_price == 0:
         print('Nevermind...There\'s no bill price. Skipping...')
@@ -70,4 +75,7 @@ for util in utilities_dict:
         payer = payer
     )
     print('\n')
-    
+
+gmail = GmailInterface()
+confirmation_email = gmail.createMessage('aaronweise1@gmail.com', 'aaronweise1@gmail.com', 'Hoffman Utils Updated!', confirmation_email_body)
+gmail.sendMessage(confirmation_email)

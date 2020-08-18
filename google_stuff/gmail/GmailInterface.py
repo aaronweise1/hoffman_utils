@@ -9,6 +9,9 @@ from apiclient.discovery import build
 import httplib2
 import base64
 import email
+from email.mime.text import MIMEText
+from apiclient import errors
+
 
 ACCESS_TOKEN = '/home/ubuntu/scripts/google_stuff/gmail/access_token.txt'
 
@@ -95,11 +98,46 @@ class GmailInterface:
           return messages_ids
 
 
-          # messages = []
-          # for message_id in messages_ids:
-          #      messages.append(self.getMessage(message_id['id']))
+     def createMessage(self, sender: str, to: str, subject: str, message_text: str):
+          """
+          Create a message for an email.
 
-          # return messages
+          Args:
+          sender: Email address of the sender.
+          to: Email address of the receiver.
+          subject: The subject of the email message.
+          message_text: The text of the email message.
+
+          Returns:
+          An object containing a base64url encoded email object.
+          """
+          message = MIMEText(message_text)
+          message['to'] = to
+          message['from'] = sender
+          message['subject'] = subject
+          raw_message = {'raw': base64.urlsafe_b64encode(message.as_bytes())}
+          raw_message['raw']=raw_message['raw'].decode('utf-8')
+          return raw_message
+     
+
+     def sendMessage(self, message: dict):
+          """Send an email message.
+
+          Args:
+          service: Authorized Gmail API service instance.
+          user_id: User's email address. The special value "me"
+          can be used to indicate the authenticated user.
+          message: Message to be sent.
+
+          Returns:
+          Sent Message.
+          """
+          try:
+               message = (self.service.users().messages().send(userId='me', body=message).execute())
+               print('Message Id: %s' % message['id'])
+               return message
+          except errors.HttpError as error:
+               print('An error occurred: %s' % error)
 
           
 
@@ -110,16 +148,20 @@ class GmailInterface:
 if __name__ == '__main__':
      gmail = GmailInterface()
 
+     # read test
+     # search_query_dict = {
+     #                'from' : 'customerservice@sfwater.org',
+     #                'subject' : 'Your New SFPUC Water Bill!',
+     #                'after' : '2020/04/01'
+     #           }
 
-     search_query_dict = {
-                    'from' : 'customerservice@sfwater.org',
-                    'subject' : 'Your New SFPUC Water Bill!',
-                    'after' : '2020/04/01'
-               }
+     # messages = gmail.getMessagesMatchingQuery(search_query_dict)
+     # print(messages)
+     # print(gmail.getMessage(messages[0]['id']))
 
-     messages = gmail.getMessagesMatchingQuery(search_query_dict)
-     print(messages)
-     print(gmail.getMessage(messages[0]['id']))
+     # send test
+     # to_send = gmail.createMessage('@gmail.com', '@gmail.com', 'test', 'testing')
+     # gmail.sendMessage(to_send)
 
 
 
